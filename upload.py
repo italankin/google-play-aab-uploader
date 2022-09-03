@@ -9,6 +9,7 @@ import requests
 
 ACCESS_TOKEN_LIFESPAN = timedelta(minutes=10)
 EDIT_ID_LIFESPAN = timedelta(minutes=10)
+REQUESTS_TIMEOUT = 300
 
 
 def check_response(response: requests.Response):
@@ -43,7 +44,9 @@ def obtain_access_token(key_path: str) -> str:
         'assertion': assertion
     }
     response = requests.post(
-        url='https://oauth2.googleapis.com/token', data=data)
+        url='https://oauth2.googleapis.com/token',
+        data=data,
+        timeout=REQUESTS_TIMEOUT)
     check_response(response)
     access_token = response.json()['access_token']
     print(f'obtained access_token: ****({len(access_token)})')
@@ -59,7 +62,8 @@ def obtain_edit_id(access_token: str, package_name: str) -> str:
     response = requests.post(
         url=f'https://androidpublisher.googleapis.com/androidpublisher/v3/applications/{package_name}/edits',
         json=app_edit,
-        headers={'Authorization': f'Bearer {access_token}'})
+        headers={'Authorization': f'Bearer {access_token}'},
+        timeout=REQUESTS_TIMEOUT)
     check_response(response)
     edit_id = response.json()['id']
     print(f'obtained {edit_id=}')
@@ -76,7 +80,8 @@ def upload_aab(access_token: str, aab_path: str, package_name: str, edit_id: str
         headers={
             'Authorization': f'Bearer {access_token}',
             'Content-Type': 'application/octet-stream'
-        }
+        },
+        timeout=REQUESTS_TIMEOUT
     )
     check_response(response)
     uploaded_bundle = response.json()
@@ -89,7 +94,8 @@ def commit_edit(access_token: str, package_name: str, edit_id: str):
     print(f'commiting {edit_id=}...')
     response = requests.post(
         url=f'https://androidpublisher.googleapis.com/androidpublisher/v3/applications/{package_name}/edits/{edit_id}:commit',
-        headers={'Authorization': f'Bearer {access_token}'})
+        headers={'Authorization': f'Bearer {access_token}'},
+        timeout=REQUESTS_TIMEOUT)
     check_response(response)
     print(f'committed {edit_id=}')
 
