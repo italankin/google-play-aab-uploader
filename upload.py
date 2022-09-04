@@ -21,10 +21,8 @@ def check_response(response: requests.Response):
         exit(1)
 
 
-def obtain_access_token(key_path: str) -> str:
+def obtain_access_token(key_file: dict) -> str:
     print('obtaining access token...')
-    with open(key_path) as f:
-        key_file = json.load(f)
     exp = datetime.now() + ACCESS_TOKEN_LIFESPAN
     claim_set = {
         'iss': key_file['client_email'],
@@ -105,9 +103,17 @@ def main():
     parser.add_argument(
         '--key-path',
         type=str,
-        required=True,
+        required=False,
+        default=None,
         dest='key_path',
         help='Path to service account key file')
+    parser.add_argument(
+        '--key-json',
+        type=str,
+        required=False,
+        default=None,
+        dest='key_json',
+        help='Service account key JSON')
     parser.add_argument(
         '--package-name',
         type=str,
@@ -121,13 +127,21 @@ def main():
         dest='aab_path',
         help='Path to app bundle file')
     args = parser.parse_args()
-    if not os.path.exists(args.key_path):
-        print(f'key file does not exist: {args.key_path}', file=sys.stderr)
+    if args.key_path:
+        if not os.path.exists(args.key_path):
+            print(f'key file does not exist: {args.key_path}', file=sys.stderr)
+            exit(1)
+        with open(args.key_path) as f:
+            key_file = json.load(f)
+    elif args.key_json:
+        key_file = json.loads(args.key_json)
+    else:
+        print(f'--key-file or --key-json is required', file=sys.stderr)
         exit(1)
     if not os.path.exists(args.aab_path):
         print(f'aab file does not exist: {args.aab_path}', file=sys.stderr)
         exit(1)
-    access_token = obtain_access_token(args.key_path)
+    access_token = obtain_access_token(key_file)
     edit_id = obtain_edit_id(access_token, args.package_name)
     upload_aab(access_token, args.aab_path, args.package_name, edit_id)
     commit_edit(access_token, args.package_name, edit_id)

@@ -8,6 +8,7 @@ A script for uploading Android App Bundles to Google Play Store.
 $ pip install -r requirements.txt
 $ python3 upload.py \
     --package-name 'com.example.myapp' \
+    # to pass JSON instead of file, use --key-json
     --key-path '/path/to/service/account/key/file' \
     --aab-path '/path/to/aab/file'
 ```
@@ -26,4 +27,27 @@ $ docker run --rm -it \
     --package-name 'com.example.myapp' \
     --key-path '/data/key.json' \
     --aab-path '/data/bundle.aab'
+```
+
+You can also use it with CI tools like Drone:
+
+```yaml
+kind: pipeline
+type: docker
+name: upload-bundle
+
+steps:
+  ...
+  - name: upload
+    image: ghcr.io/italankin/google-play-aab-uploader
+    environment:
+      GOOGLE_PLAY_KEY_BASE64:
+        from_secret: google_play_key_base64
+    commands:
+      - echo "$GOOGLE_PLAY_KEY_BASE64" | base64 -d > key.json
+      - >
+        python /google-play-uploader/upload.py \
+          --package-name com.example.myapp \
+          --key-path key.json \
+          --aab-path app/build/outputs/bundle/release/app-release.aab
 ```
