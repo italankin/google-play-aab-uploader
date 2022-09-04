@@ -5,6 +5,7 @@ A script for uploading Android App Bundles to Google Play Store.
 ## Usage
 
 ```sh
+$ pip install -r requirements.txt
 $ python3 upload.py \
     --package-name 'com.example.myapp' \
     --key-path '/path/to/service/account/key/file' \
