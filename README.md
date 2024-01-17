@@ -13,6 +13,22 @@ $ python3 upload.py \
     --aab-path '/path/to/aab/file'
 ```
 
+### GitHub Actions
+
+Example of usage in GitHub Actions workflow:
+
+```yaml
+steps:
+  # ...
+
+  - name: Upload AAB
+    uses: italankin/google-play-aab-uploader@1.3
+    with:
+      package-name: 'com.example.app'
+      aab-path: 'app/build/outputs/bundle/release/app-release.aab'
+      key-json: '${{ secrets.SERVICE_KEY_JSON }}'
+```
+
 ## Docker image
 
 Docker image is available at [ghcr.io](https://ghcr.io/italankin/google-play-aab-uploader).
