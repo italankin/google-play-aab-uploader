@@ -1,0 +1,19 @@
+name: 'Google Play AAB Upload'
+description: 'Upload Android App Bundle to Google Play'
+inputs:
+  package-name:
+    required: true
+    description: 'Package name of the bundle'
+  aab-path:
+    required: true
+    description: 'Path to the bundle'
+  key-json:
+    required: true
+    description: 'Service account key JSON'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - '--package-name=${{ inputs.package-name }}'
+    - '--aab-path=${{ inputs.aab-path }}'
+    - '--key-json=${{ inputs.key-json }}'
