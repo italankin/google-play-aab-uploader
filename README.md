@@ -4,8 +4,15 @@ A script for uploading Android App Bundles to Google Play Store.
 
 ## Usage
 
+### Obtain service key
+
+Use [this instructions](https://developers.google.com/android-publisher/getting_started) to obtain service key file (JSON) and grant access to upload app bundles.
+You will only need `Edit and delete draft apps` permission.
+
+### Using script directly
+
 ```sh
-$ pip install -r requirements.txt
+$ pip3 install -r requirements.txt
 $ python3 upload.py \
     --package-name 'com.example.myapp' \
     # to pass JSON instead of file, use --key-json
