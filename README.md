@@ -6,7 +6,7 @@ A script for uploading Android App Bundles to Google Play Store.
 
 ### Obtain service key
 
-Use [this instructions](https://developers.google.com/android-publisher/getting_started) to obtain service key file (JSON) and grant access to upload app bundles.
+Use [these instructions](https://developers.google.com/android-publisher/getting_started) to obtain service key file (JSON) and grant access to upload app bundles.
 You will only need `Edit and delete draft apps` permission.
 
 ### Using script directly
